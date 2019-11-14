@@ -4,8 +4,7 @@ import java.net.*;
 import java.io.*;
 
 public class clienteudp {
-	//daddsad
-	
+		
   
 private static final int UDP_PORT=7; 
     public static void main(String argv[]) {
