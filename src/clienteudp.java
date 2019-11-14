@@ -1,85 +1,84 @@
 
-
 import java.net.*;
 import java.io.*;
 
+/*  DRS 14/nov/2019
+ *  This is a client, it sends and receive messages from the server
+*/
+
 public class clienteudp {
-		
-  
-private static final int UDP_PORT=7; 
-    public static void main(String argv[]) {
 
-    	System.out.println("Starting echo client on port "+ UDP_PORT + " ...");
-    	System.out.println("Type some text to receive server echo or \"end\" to quit");
-    	    	
-        /*
-         * Leemos los argumentos del programa para saber a qué
-         * servidor hay que conectarse
-         */
-        if (argv.length == 0) {
-            System.err.println("Introduce your upd server");
-            System.exit(1);
-        }
+	private static final int UDP_PORT = 7;
 
-        //Preparamos un buffer de entrada de teclado
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        DatagramSocket socket = null;
-        InetAddress address;
-        byte[] mensaje_bytes = new byte[256];
-        String mensaje = "";
-        /*
-         * Definimos dos DatagramPacket uno para enviar y otro para recibir
-         */
-        DatagramPacket paqueteEnviado;
-        DatagramPacket paqueteRespuesta;
+	public static void main(String argv[]) {
 
-        mensaje_bytes = mensaje.getBytes();
+		System.out.println("Starting echo client on port " + UDP_PORT + " ...");
+		System.out.println("Type some text to receive server echo or \"end\" to quit");
 
-        try {
-        	//instanciamos el socket
-            socket = new DatagramSocket();
-            
-            //resolvemos la IP del servidor
+		/*
+		 * Get arguments to connect to server
+		 * 
+		 */
+		if (argv.length == 0) {
+			System.err.println("Introduce your upd server address when calling this program");
+			System.exit(1);
+		}
+
+		// Preparing buffer for keyboard entry
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		DatagramSocket socket = null;
+		InetAddress address;
+		byte[] mensaje_bytes = new byte[256];
+		String mensaje = "";
+		/*
+		 * Defining 2 DatagramPacket, one for sending and another for receiving
+		 */
+		DatagramPacket paqueteEnviado;
+		DatagramPacket paqueteRespuesta;
+
+		mensaje_bytes = mensaje.getBytes();
+
+		try {
+			// socket instance
+			socket = new DatagramSocket();
+
+			// resolve server IP
 			address = InetAddress.getByName(argv[0]);
-	        
-            /*
-             * Creamos paquetes que enviamos al puerto UDP_PORT, 
-             * enviando lo que el usuario escribe por teclado. 
-			 * Acabamos con la palabra end.
-             */
-            do {
-            	//el sistema espera una entrada de teclado
-                mensaje = in.readLine();
-                mensaje_bytes = mensaje.getBytes();
-                //Establecemos el valor de los atributos de DatagramPacket, mensaje, tamaño de mensaje, dirección servidor y puerto destino
-                paqueteEnviado = new DatagramPacket(mensaje_bytes, mensaje.length(), address, UDP_PORT);
-                //enviamos el DatagramPacket por el socket 
-                socket.send(paqueteEnviado);          
-     
-                
-                // Construimos otro DatagramPacket para recibir la respuesta
-                //DatagramPacket 
-                paqueteRespuesta =
-                  new DatagramPacket(mensaje_bytes, mensaje.length());
-                
-                paqueteEnviado = new DatagramPacket(mensaje_bytes, mensaje.length(), address, UDP_PORT);
-                
-                socket.receive(paqueteRespuesta);
 
-                // Enviamos la respuesta del servidor a la salida estandar
-                System.out.println("Respuesta: " + new String(paqueteRespuesta.getData()));
+			/*
+			 * Create packets to send to UDP_PORT, Here we send keyboard user's entries It
+			 * finish with the "end" word.
+			 */
+			do {
+				// The system is waiting for keyboard entries
+				mensaje = in.readLine();
+				mensaje_bytes = mensaje.getBytes();
+				// Establishing value for DatagramPacket attributes, message, message size,
+				// server and destination port
+				paqueteEnviado = new DatagramPacket(mensaje_bytes, mensaje.length(), address, UDP_PORT);
+				// DatagramPacket sent by socket
+				socket.send(paqueteEnviado);
 
-                
-                
-            } while (!mensaje.startsWith("end"));
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        } finally {
-            if (socket != null) {
-                System.out.println("Closing client socket ...");
-                socket.close();
-            }
-        }
-    }
+				// Build another DatagramPacket for the response
+				// DatagramPacket
+				paqueteRespuesta = new DatagramPacket(mensaje_bytes, mensaje.length());
+
+				paqueteEnviado = new DatagramPacket(mensaje_bytes, mensaje.length(), address, UDP_PORT);
+
+				socket.receive(paqueteRespuesta);
+
+				// Send server response to standard output
+				System.out.println("Response: " + new String(paqueteRespuesta.getData()));
+
+			} while (!mensaje.startsWith("end"));
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			System.exit(1);
+		} finally {
+			if (socket != null) {
+				System.out.println("Closing client socket ...");
+				socket.close();
+			}
+		}
+	}
 }
