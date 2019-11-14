@@ -16,7 +16,7 @@ public class clienteudp {
 		System.out.println("Type some text to receive server echo or \"end\" to quit");
 
 		/*
-		 * Get arguments to connect to server
+		 * Get the argument to connect to server
 		 * 
 		 */
 		if (argv.length == 0) {
