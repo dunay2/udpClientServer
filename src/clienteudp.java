@@ -20,7 +20,7 @@ public class clienteudp {
 		 * 
 		 */
 		if (argv.length == 0) {
-			System.err.println("Introduce your upd server address when calling this program");
+			System.err.println("Introduce your udp server address when calling this program");
 			System.exit(1);
 		}
 
